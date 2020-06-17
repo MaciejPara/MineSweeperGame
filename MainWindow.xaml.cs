@@ -16,63 +16,58 @@ using System.Windows.Shapes;
 namespace MineSweeperGame
 {
 
+    //System.Diagnostics.Debug.WriteLine("");
+
     public partial class MainWindow : Window
     {
         private List<Field> fields = new List<Field> { };
         private List<Point> randomBombs = new List<Point> { };
         private int dimensions = 5;
         private bool gameIsFinished = false;
+        private int clickedFields;
+        private string startTime;
+        public int bombFlags = 0;
 
         public MainWindow()
         {
+            //System.Diagnostics.Debug.WriteLine("init");
             InitializeComponent();
+        }
 
-            Random randNum = new Random();
-            int Min = 0;
-            int Max = 4;
-
-            randomBombs = generateRandomPoints(Min, Max, this.dimensions);
-
-
-            for (int x = 0; x < this.dimensions; x++)
+        public void clearAllFieldsAround(Point buttonPoint)
+        {
+            
+            List<Field> foundFields = new List<Field>
             {
+                fields.Find(field => field.point.x + 1 == buttonPoint.x && field.point.y == buttonPoint.y),
+                fields.Find(field => field.point.x - 1 == buttonPoint.x && field.point.y == buttonPoint.y),
+                fields.Find(field => field.point.x == buttonPoint.x && field.point.y + 1 == buttonPoint.y),
+                fields.Find(field => field.point.x == buttonPoint.x && field.point.y - 1 == buttonPoint.y),
+                fields.Find(field => field.point.x + 1 == buttonPoint.x && field.point.y + 1 == buttonPoint.y),
+                fields.Find(field => field.point.x + 1 == buttonPoint.x && field.point.y - 1 == buttonPoint.y),
+                fields.Find(field => field.point.x - 1 == buttonPoint.x && field.point.y + 1 == buttonPoint.y),
+                fields.Find(field => field.point.x - 1 == buttonPoint.x && field.point.y - 1 == buttonPoint.y)
+            };
 
-                this.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                this.mainGrid.RowDefinitions.Add(new RowDefinition());
+            List<Field> filtered = foundFields.FindAll(e => e != null);
 
+            foreach (Field filteredField in filtered) {
 
-                for (int y = 0; y < this.dimensions; y++)
-                {
-                    fields.Add(AddButton(x, y, this.mainGrid, fields.Count())); 
-                }
-            }
+                if (!filteredField.state.clicked) {
+                    filteredField.button.Background = Brushes.White;
+                    filteredField.state.clicked = true;
 
-            foreach (Field field in fields)
-            {
-                Point buttonPoint = field.point;
-                Button button = field.button;
+                    countClick();
 
-                //@todo optimize
-                foreach(Point randomBomb in randomBombs)
-                {
-                    bool found = randomBomb.x == buttonPoint.x && randomBomb.y == buttonPoint.y;
-
-                    if (found) {
-                        field.state = new State(0, 0, true);
+                    if (filteredField.state.number == null)
+                    {
+                        clearAllFieldsAround(filteredField.point);
+                    }
+                    else 
+                    {
+                        filteredField.button.Content = filteredField.state.number;
                     }
                 }
-
-                if (field.state == null) {
-                    field.state = new State(0, 0, false);
-                }
-            }
-
-            foreach (Field field in fields)
-            {
-                Point buttonPoint = field.point;
-
-                field.state.number = getBombsAround(buttonPoint);
-                field.button.Foreground = Brushes.Black;
             }
         }
 
@@ -145,12 +140,21 @@ namespace MineSweeperGame
             }
         }
 
+        private void countClick() {
+            clickedFields++;
+
+            if (clickedFields == fields.Count() - randomBombs.Count()) {
+                resetGame();
+                showWinInfo();
+            }
+        }
+
         Field AddButton(int row, int column, Grid parent, int id)
         {
 
             Button button = new Button();
-            button.Width = 125/ this.dimensions;
-            button.Height = 125/ this.dimensions;
+            button.Width = 25;
+            button.Height = 25;
             button.Padding = new Thickness(5);
             button.Click += Button_Click;
             button.MouseDown += Button_Right_Click;
@@ -170,26 +174,42 @@ namespace MineSweeperGame
             if (!this.gameIsFinished) {
                 Button btn = sender as Button;
                 State state = fields[(Int32)btn.Tag].state;
+                Point point = fields[(Int32)btn.Tag].point;
 
-                if (state != null && state.isBomb)
-                {
-                    this.showAllBombs();
-                }
-                else
-                {
-                    btn.Background = Brushes.White;
-
-                    if (state.number != null)
+                if (state.id != 3) {
+                    if (state != null && state.isBomb)
                     {
-                        btn.Content = state.number;
+                        this.showAllBombs();
                     }
                     else
                     {
-                        btn.Content = "";
+                        btn.Background = Brushes.White;
+                        state.clicked = true;
+
+                        countClick();
+
+                        if (state.number != null)
+                        {
+                            btn.Content = state.number;
+                        }
+                        else
+                        {
+                            this.clearAllFieldsAround(point);
+
+                            btn.Content = "";
+                        }
+
                     }
-                    
                 }
             }
+        }
+
+        public void showWinInfo() {
+            this.info.Visibility = Visibility.Visible;
+            this.time.Visibility = Visibility.Visible;
+
+            this.info.Content = "You won with time: ";
+            this.time.Content = (DateTime.Now - Convert.ToDateTime(this.startTime)).ToString("c");
         }
 
         public void showAllBombs() {
@@ -209,31 +229,143 @@ namespace MineSweeperGame
                 Button btn = sender as Button;
                 State state = fields[(Int32)btn.Tag].state;
 
+                if (e.ChangedButton == MouseButton.Right && !state.clicked && state.id != 3 && this.bombFlags > 0)
+                {
+                    state.id = 3;
+                    btn.Background = Brushes.Yellow;
+                    btn.Content = new Image
+                    {
+                        //Source = new BitmapImage(new Uri("/MineSweeperGame;component/assets/mask2.png", UriKind.RelativeOrAbsolute)),
+                        Source = new BitmapImage(new Uri("C:\\Users\\cieni\\source\\repos\\MineSweeperGame\\assets\\Bitmap1.bmp", UriKind.RelativeOrAbsolute)),
 
+                        VerticalAlignment = VerticalAlignment.Center,
 
-                //if (e.ChangedButton == MouseButton.Right && btn.Tag != "clicked")
-                //{
-
-                //    btn.Tag = "clicked";
-                //    btn.Background = Brushes.Yellow;
-                //    btn.Content = new Image
-                //    {
-                //        //Source = new BitmapImage(new Uri("/MineSweeperGame;component/assets/mask2.png", UriKind.RelativeOrAbsolute)),
-                //        Source = new BitmapImage(new Uri("C:\\Users\\cieni\\source\\repos\\MineSweeperGame\\assets\\Bitmap1.bmp", UriKind.RelativeOrAbsolute)),
-
-                //        VerticalAlignment = VerticalAlignment.Center,
-
-                //        Height = 15,
-                //        Width = 15
-                //    };
-                //}
-                //else if (btn.Tag == "clicked")
-                //{
-                //    btn.Tag = "";
-                //    btn.Content = "";
-                //    btn.Background = Brushes.LightGray;
-                //}
+                        Height = 15,
+                        Width = 15
+                    };
+                    
+                    this.showCurrentFlags(-1);
+                }
+                else if (state.id == 3)
+                {
+                    state.id = 0;
+                    btn.Content = "";
+                    btn.Background = Brushes.LightGray;
+                    this.showCurrentFlags(1);
+                }
             }
+        }
+
+        private void showCurrentFlags(int number = 0)
+        {
+            this.bombFlags += number;
+            this.flags.Content = "Flags: " + this.bombFlags;
+        }
+
+        private void initGame()
+        {
+            Random randNum = new Random();
+            int Min = 0;
+            int Max = this.dimensions;
+            
+            
+
+            this.clickedFields = 0;
+            this.info.Visibility = Visibility.Hidden;
+            this.time.Visibility = Visibility.Hidden;
+            this.startTime = DateTime.Now.ToString("h:mm:ss tt");
+
+            randomBombs = generateRandomPoints(Min, Max, this.dimensions);
+
+
+            for (int x = 0; x < this.dimensions; x++)
+            {
+
+                this.mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                this.mainGrid.RowDefinitions.Add(new RowDefinition());
+
+
+                for (int y = 0; y < this.dimensions; y++)
+                {
+                    fields.Add(AddButton(x, y, this.mainGrid, fields.Count()));
+                }
+            }
+
+            foreach (Field field in fields)
+            {
+                Point buttonPoint = field.point;
+                Button button = field.button;
+
+                //@todo optimize
+                foreach (Point randomBomb in randomBombs)
+                {
+                    bool found = randomBomb.x == buttonPoint.x && randomBomb.y == buttonPoint.y;
+
+                    if (found)
+                    {
+                        field.state = new State(0, 0, true);
+                    }
+                }
+
+                if (field.state == null)
+                {
+                    field.state = new State(0, 0, false);
+                }
+            }
+
+            foreach (Field field in fields)
+            {
+                Point buttonPoint = field.point;
+
+                int bombsAround = getBombsAround(buttonPoint);
+
+                if (bombsAround > 0) {
+                    field.state.number = bombsAround;
+                }
+                else
+                {
+                    field.state.number = null;
+                }
+
+                field.button.Foreground = Brushes.Black;
+            }
+
+
+            this.bombFlags = this.randomBombs.Count();
+            showCurrentFlags();
+        }
+
+        private void resetGame()
+        {
+            this.mainGrid.Children.Clear();
+
+            this.mainGrid.Height = 25 * this.dimensions;
+            this.mainGrid.Width = 25 * this.dimensions;
+
+            this.fields = new List<Field> { };
+
+            this.mainGrid.ColumnDefinitions.Clear();
+            this.mainGrid.RowDefinitions.Clear();
+             
+            this.randomBombs = new List<Point> { };
+        }
+
+        private void StartGameButton(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            this.gameIsFinished = false;
+
+            btn.Content = "Restart";
+
+            this.resetGame();
+            this.initGame();
+        }
+
+        private void onRadioCLick(object sender, RoutedEventArgs e)
+        {
+            RadioButton radio = sender as RadioButton;
+
+            this.dimensions = Convert.ToInt32(radio.Tag);
         }
     }
 
@@ -244,6 +376,7 @@ namespace MineSweeperGame
         public string color { get; set; }
         public int? number { get; set; }
         public bool isBomb { get; set; }
+        public bool clicked { get; set; }
 
         public State(int id, int? number, bool isBomb) {
             this.id = id;

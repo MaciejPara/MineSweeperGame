@@ -14,10 +14,23 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid x:Name="mainGrid" Width="125" Height="125">
-        <Grid.ColumnDefinitions x:Uid="columns">
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions x:Uid="rows">
-        </Grid.RowDefinitions>
+
+    <Grid  Height="450" Width="800">
+        <Grid x:Name="subGrid">
+            <Button x:Name="start"  Content="Start" HorizontalAlignment="Left" Margin="-256,-115,0,0" Width="100" Height="50" VerticalAlignment="Top" Click="StartGameButton" Background="White" BorderBrush="#FFD1D1D1" Foreground="#DD000000"/>
+            <Label x:Name="info" Content="You won!!!" VerticalAlignment="Top" Visibility="Hidden" HorizontalAlignment="Center" Width="122" Height="73"/>
+            <Label x:Name="time" Content=""  Margin="0,52,0,0" VerticalAlignment="Top" Visibility="Hidden" HorizontalAlignment="Center" Width="123" Height="73"/>
+            <RadioButton x:Name="radio1" Tag="5" Content="5x5" HorizontalAlignment="Left" Margin="-256,0,0,0" VerticalAlignment="Top" IsChecked="True" Background="Black" BorderBrush="White" Checked="onRadioCLick"/>
+            <RadioButton x:Name="radio2" Tag="8" Content="8x8" HorizontalAlignment="Left" Margin="-256,23,0,0" VerticalAlignment="Top" BorderBrush="White" Background="Black" Checked="onRadioCLick"/>
+            <RadioButton x:Name="radio3" Tag="10" Content="10x10" HorizontalAlignment="Left" Margin="-256,46,0,0" VerticalAlignment="Top" BorderBrush="White" Background="Black" Checked="onRadioCLick"/>
+            <Label x:Name="flags" Content="Flags: " HorizontalAlignment="Left" Margin="-256,88,0,0" VerticalAlignment="Top"/>
+
+        </Grid>
+        <Grid x:Name="mainGrid">
+            <Grid.ColumnDefinitions x:Uid="columns">
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions x:Uid="rows">
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 </Window>
