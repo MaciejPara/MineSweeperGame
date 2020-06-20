@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MineSweeperGame</name>
+    </assembly>
+    <members>
+        <member name="T:MineSweeperGame.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:MineSweeperGame.MainWindow">
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="F:MineSweeperGame.MainWindow.clickedFields">
+            <summary>
+            Count of clicked fields
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.#ctor">
+            <summary>
+            Main window initialization
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.InitGame">
+            <summary>
+            Initialize Grid with fields and start game
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.ResetGame">
+            <summary>
+            Clears grid with fields and resets main game settings
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.ClearAllFieldsAround(MineSweeperGame.src.Point)">
+            <summary>
+            Clear fields with empty number and show closest fields with number around provided point
+            </summary>
+            <param name="buttonPoint">Point with x and y coordinate</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.CountClick">
+            <summary>
+            Count field click
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.ShowWinInfo">
+            <summary>
+            Show info message after winning
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.AddResults(System.Int32,System.String)">
+            <summary>
+            Add game result to list view
+            </summary>
+            <param name="id">Index of the result</param>
+            <param name="time">Game time</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.ShowAllBombs">
+            <summary>
+            Show all bombs after game over
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.ShowCurrentFlags(System.Int32)">
+            <summary>
+            Show current flag number
+            </summary>
+            <param name="number">Flag number</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.OnFieldClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handle field click
+            </summary>
+            <param name="sender">Button object</param>
+            <param name="e">event</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.OnFieldRightClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Handle field right click
+            </summary>
+            <param name="sender">Button object</param>
+            <param name="e">event</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.OnDimensionsCLick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handle dimensions change
+            </summary>
+            <param name="sender">Button object</param>
+            <param name="e">event</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.OnModeClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handle mode change - difficulty of the game
+            </summary>
+            <param name="sender">Button object</param>
+            <param name="e">event</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.OnStartGameButtonClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Handle game start button click
+            </summary>
+            <param name="sender">Button object</param>
+            <param name="e">event</param>
+        </member>
+        <member name="M:MineSweeperGame.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:MineSweeperGame.src.Field">
+            <summary>
+            Smalest piece of grid which contains data about bomb, number of bombs around and clicable button
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.Field.Point">
+            <summary>
+            Point instance
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.Field.State">
+            <summary>
+            State instance
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.Field.Button">
+            <summary>
+            Button instance
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.src.Field.#ctor(MineSweeperGame.src.Point,System.Windows.Controls.Button)">
+            <summary>
+            Initialize field with button and point
+            </summary>
+            <param name="point">point instance</param>
+            <param name="button">button instance</param>
+        </member>
+        <member name="M:MineSweeperGame.src.Field.AddButton(System.Int32,System.Int32,System.Windows.Controls.Grid,System.Int32)">
+            <summary>
+            Add new button to Grid and set as new field
+            </summary>
+            <param name="row">row position</param>
+            <param name="column">column position</param>
+            <param name="parent">parent node</param>
+            <param name="id">button id</param>
+            <returns>New Field with button attached to grid</returns>
+        </member>
+        <member name="T:MineSweeperGame.src.Point">
+            <summary>
+            Point - object with x and y coordinate
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.Point.X">
+            <summary>
+            X coordinate
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.Point.Y">
+            <summary>
+            Y coordinate
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.src.Point.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Point initialization
+            </summary>
+            <param name="x">coordinate</param>
+            <param name="y">coordinate</param>
+        </member>
+        <member name="M:MineSweeperGame.src.Point.GenerateRandomPoints(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Generate random points - bombs destination
+            </summary>
+            <param name="min">minimum number</param>
+            <param name="max">maximum number</param>
+            <param name="count">count of point to generate</param>
+            <returns>List of random points</returns>
+        </member>
+        <member name="M:MineSweeperGame.src.Point.GenerateValidRandomPoint(System.Int32,System.Int32,System.Collections.Generic.List{MineSweeperGame.src.Point})">
+            <summary>
+            Generate random point which doesn't exists in provided list
+            </summary>
+            <param name="min">minimum number</param>
+            <param name="max">maximum number</param>
+            <param name="points">list of points</param>
+            <returns>Random point</returns>
+        </member>
+        <member name="M:MineSweeperGame.src.Point.GetRandomPoint(System.Int32,System.Int32)">
+            <summary>
+            Get random point - object with x and y coordinate
+            </summary>
+            <param name="min">minimum number</param>
+            <param name="max">maximum number</param>
+            <returns>Random point</returns>
+        </member>
+        <member name="M:MineSweeperGame.src.Point.GetBombsAround(MineSweeperGame.src.Point,System.Collections.Generic.List{MineSweeperGame.src.Point})">
+            <summary>
+            Count number of bombs around provided point
+            </summary>
+            <param name="buttonPoint">the point the user clicked</param>
+            <param name="randomBombs">points where is are the bombs</param>
+            <returns>Bombs count</returns>
+        </member>
+        <member name="T:MineSweeperGame.src.Result">
+            <summary>
+            Game win result
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.src.Result.#ctor(System.Int32,System.String)">
+            <summary>
+            Initialize single result with id and time
+            </summary>
+            <param name="id">result id</param>
+            <param name="time">game finish time</param>
+        </member>
+        <member name="T:MineSweeperGame.src.State">
+            <summary>
+            Field state 
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.State.Id">
+            <summary>
+            State id
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.State.Number">
+            <summary>
+            Number of bombs around 
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.State.IsBomb">
+            <summary>
+            Is bomb flag
+            </summary>
+        </member>
+        <member name="P:MineSweeperGame.src.State.Clicked">
+            <summary>
+            Is clicked flag
+            </summary>
+        </member>
+        <member name="M:MineSweeperGame.src.State.#ctor(System.Int32,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Initialize state with id, number and isBomb flag
+            </summary>
+            <param name="id">state id</param>
+            <param name="number">number of bombs around</param>
+            <param name="isBomb">flag</param>
+        </member>
+    </members>
+</doc>
